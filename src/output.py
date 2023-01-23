@@ -7,7 +7,13 @@ def log(msg: str):
     Simple print statement with timestamp.
     """
     ts = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S.%f')[:-3]
-    print(f'[{ts}]: {msg}')
+    ts = f'[{ts}]'
+    tab = ' '*(len(ts)+1)
+    for n, line in enumerate(msg.split('\n')):
+        if n == 0:
+            print(f'{ts}: {line}')
+        else:
+            print(f'{tab} {line}')
 
 
 def seconds2pretty(seconds: float, show_ms: bool = True, short: bool = False) -> str:
