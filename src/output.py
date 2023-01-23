@@ -1,5 +1,9 @@
+from typing import Optional
 import math
 from datetime import datetime
+import sys
+from traceback import StackSummary, extract_tb
+from types import TracebackType
 
 
 def log(msg: str):
@@ -14,6 +18,13 @@ def log(msg: str):
             print(f'{ts}: {line}')
         else:
             print(f'{tab} {line}')
+
+
+def get_traceback_str(traceback: Optional[TracebackType] = None) -> str:
+    if traceback is None:
+        _, _, traceback = sys.exc_info()
+    tb_parts = [item.strip() for item in StackSummary.from_list(extract_tb(traceback)).format()]
+    return '\n'.join(tb_parts)
 
 
 def seconds2pretty(seconds: float, show_ms: bool = True, short: bool = False) -> str:

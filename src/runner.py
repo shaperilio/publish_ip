@@ -3,7 +3,7 @@ import time
 from ip_getters import get_ip_ifconfig_me
 from ovpn import check_and_replace_ip
 from publishers import publish
-from output import log, seconds2pretty
+from output import log, seconds2pretty, get_traceback_str
 
 if __name__ == '__main__':
     import argparse
@@ -35,7 +35,9 @@ if __name__ == '__main__':
                 log(f'IP address is still {my_ip}; no update necessary.')
             publish(config_file, publish_loc, config_changed)
         except Exception as e:
-            log(f'Exception encountered:\n\n{e}\n\nRetrying in 1 minute.')
+            log(f'`{e.__class__.__name__}` encountered:\n\n'
+                f'{e}\n\nTraceback:\n{get_traceback_str()}\n\n'
+                'Retrying in 1 minute.')
             time.sleep(60)
             continue
         log(f'Waiting {seconds2pretty(interval_sec)} until next check.')
