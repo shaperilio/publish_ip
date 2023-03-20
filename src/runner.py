@@ -20,10 +20,14 @@ if __name__ == '__main__':
                         'Otherwise, the path is assumed to be local.')
     parser.add_argument('-i', '--interval_minutes', default='10', action='store',
                         help='Number of minutes to wait between IP address checks.')
+    parser.add_argument('-a', '--always_update', action='store_true',
+                        help='Force a publish of the profile even if the IP address '
+                        'has not changed.')
     args = parser.parse_args()
     config_file = args.source_ovpn_file[0]
     publish_loc = args.dest_ovpn_file[0]
     interval_sec = float(args.interval_minutes) * 60
+    always_update = args.always_update
     while True:
         try:
             my_ip = get_ip_ifconfig_me()
@@ -33,7 +37,7 @@ if __name__ == '__main__':
             else:
                 config_changed = False
                 log(f'IP address is still {my_ip}; no update necessary.')
-            publish(config_file, publish_loc, config_changed)
+            publish(config_file, publish_loc, always_update or config_changed)
         except Exception as e:
             log(f'`{e.__class__.__name__}` encountered:\n\n'
                 f'{e}\n\nTraceback:\n{get_traceback_str()}\n\n'
